@@ -1,0 +1,18 @@
+17
+Token VARCHAR(100) NOT NULL
+AvailabilityStatus VARCHAR(10)
+ClosedReason VARCHAR(20)
+Code VARCHAR(20) NOT NULL
+CompassDirection VARCHAR(4)
+Latitude FLOAT(12,8) NOT NULL
+Longitude FLOAT(12,8) NOT NULL
+Proximity FLOAT(4,3)
+ProximityUnits VARCHAR(10)
+Name VARCHAR(100) NOT NULL
+CalculationMethod VARCHAR(20)
+CommissionableStatus VARCHAR(25)
+Currency VARCHAR(20) NOT NULL
+Max FLOAT NOT NULL
+Min FLOAT NOT NULL
+RatePlan VARCHAR(20)
+lang VARCHAR(4)
