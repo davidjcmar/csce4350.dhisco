@@ -7,3 +7,4 @@ xml = open(sys.argv[1], "r")
 for line in xml:
     soup = Soup(line, "xml")
     print soup.prettify()
+    print "****************"
