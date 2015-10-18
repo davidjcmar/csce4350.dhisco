@@ -1,6 +1,7 @@
 #!/usr/bin/python -B
 from bs4 import BeautifulSoup as Soup
 import sys
+import MySQLdb
 
 xml = open(sys.argv[1], "r")
 
@@ -36,11 +37,12 @@ for line in xml:
 #end testing
 	head = soup.HotelML
 	tag = head.contents[0]
-#	print tag.name		#testing
+#testing	
+#	print tag.name		
 #	for child in tag.children:
 #		print child, "\n"
-#	print head.name		#testing
-
+#	print head.name		
+#end testing
 	# parse form tags
 	if tag.name == "Form":
 		tag = tag.parent
@@ -60,11 +62,20 @@ for line in xml:
 #			print child.name
 			# tags are leaf tags, contain string values
 			if child.string is not None:
+				# expected tag
 				if child.name == tags_head[head_it]:
 					temp_head.append(child.string)
 					head_it += 1
-					if head_it == len(tags_head):
-						head_it = int(tags_head[0]) + 1 # reset body tag counter
+				# out of order tag, ignore
+				else:
+					for i in range(head_it, len(tags_head)):
+						if child.name == tags_head[i]:
+							temp_head.append("NULL")
+							head_it += 1
+							break
+				# reset counter
+				if head_it == len(tags_head):
+					head_it = int(tags_head[0]) + 1
 	# append to file
 	with open(form_parsed, "a") as fd:
 		for i in temp_form:
@@ -81,5 +92,10 @@ for line in xml:
 #		print "head: ",j
 # end testing
 
-
-
+# databasey things
+my_host = "localhost"
+my_user = "david"
+my_pw = "GLhZtUZSzztjz9tW"
+my_db = "dhiscodb"
+db = MySQLdb.connect (host = my_host, user = my_user, passwd = my_pw)
+cur = db.cursor()
