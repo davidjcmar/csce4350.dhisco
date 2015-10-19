@@ -1,7 +1,6 @@
 #!/usr/bin/python -B
 from bs4 import BeautifulSoup as Soup
 import sys
-import MySQLdb
 
 xml = open(sys.argv[1], "r")
 
@@ -48,10 +47,22 @@ for line in xml:
 		tag = tag.parent
 		form_it = 0
 		for child in tag.descendants:
+			# tags are leaf tags, contain string values
 			if child.string is not None:
+				# expected tag
 				if child.name == tags_form[form_it % len(tags_form)]:
 					temp_form.append(child.string)
 					form_it += 1
+				# out of order tag, ignore
+				else:
+					for i in range(form_it, len(tags_form)):
+						if child.name == tags_form[i]:
+							temp_form.append("NULL")
+							form_it += 1
+							break
+				if form_it == len(tags_form):
+					form_it = 0
+
 	#parse head tags
 	else:
 		tag = tag.parent
@@ -91,11 +102,3 @@ for line in xml:
 #	for j in temp_head:
 #		print "head: ",j
 # end testing
-
-# databasey things
-my_host = "localhost"
-my_user = "david"
-my_pw = "GLhZtUZSzztjz9tW"
-my_db = "dhiscodb"
-db = MySQLdb.connect (host = my_host, user = my_user, passwd = my_pw)
-cur = db.cursor()
